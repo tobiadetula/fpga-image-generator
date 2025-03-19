@@ -1,0 +1,25 @@
+server {
+    listen 443 ssl;
+    server_name embedded-systems-teaching.tek.sdu.dk;
+    
+    ssl_certificate /etc/nginx/ssl/selfsigned.crt;
+    ssl_certificate_key /etc/nginx/ssl/selfsigned.key;
+    
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /download/ {
+        root /home/olade/embedded-systems/fpga-image-generator/output_images;
+    }
+}
+
+
+server {
+    listen 80;
+    server_name embedded-systems-teaching.tek.sdu.dk;
+    return 301 https://$host$request_uri;
+}
